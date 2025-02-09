@@ -16,6 +16,17 @@ app.use("/register", (req, res) => {
 //   });
   res.redirect('/api/user/login') //we also can replace the apis like when user go /register route they will redirect to login page
 });
+// !Cookies 
+app.get('/login', (req,res)=>{
+    // res.send('cookies set check into application section into console')
+    // res.cookie("name", "Hemal")
+    // res.cookie('age', '30')
+    // remove or clear cookie 
+    res.clearCookie("name")
+    res.append("id","1300")
+    res.end()
+})
+
 
 app.use("/", (req, res) => {
   // routing default route for home page..
