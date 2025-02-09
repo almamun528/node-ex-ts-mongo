@@ -1,6 +1,6 @@
 // user router 
 const express = require('express')
-const router = express.Router()
+const router = express.Router() //require Router from express and export it
 
 
 

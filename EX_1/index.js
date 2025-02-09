@@ -12,3 +12,9 @@ app.listen(PORT, ()=>{
 
     console.log(`server is running ${PORT}`) 
 })
+
+// server response ---> 
+// 1. body can holds data as HTML, TEXT , Json
+// 2. Cookies 
+// 3. Headers 
+// 4. statusCode 
