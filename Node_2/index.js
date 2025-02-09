@@ -13,7 +13,7 @@ fs.writeFile('demo1.txt', 'Write anything into this function. ', function(error)
     }
     // in using this function we can create a file and into the file we can write anything
     // if we change anything (text/context) file will overwrite and show the last updated data
-// })
+})
 //! another function is append 
 
 fs.appendFile('demo1.txt', 'i am 25 ', function(error){
@@ -50,9 +50,6 @@ fs.rename('demo1.txt', 'demo.txt', (error)=>{
     }
     // change file name it is called rename. 
 })
-
-
-
 // Another function  Delete any file 
 
 fs.unlink('demo.txt', (error)=>{

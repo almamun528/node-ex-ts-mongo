@@ -3,5 +3,4 @@
 //topic- external module (nodemon)
 // Random fruits name - packages  
 const getRandomFruitsName = require('random-fruits-name')
-console.log(getRandomFruitsName()) //get Different fruits 
-
+console.log(getRandomFruitsName()) //get Different fruits
