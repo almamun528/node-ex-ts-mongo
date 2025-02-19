@@ -10,7 +10,7 @@ app.use(express.json());
 
 const connectBD = async () => {
   try {
-    await mongoose.connect("mongodb://localhost/testProduct");
+    await mongoose.connect("mongodb://localhost");
   } catch (error) {
     console.log("db is not connected");
     console.log(error.message);
@@ -93,6 +93,22 @@ app.get("/products/:id", async (req, res) => {
     res.status(500).send({ message: error.message });
   }
 });
+// delete 
+// ! Delete all products and drop the collection
+// app.delete("/products", async (req, res) => {
+//   try {
+//     // Delete all documents
+//     await product.deleteMany({});
+
+//     // Drop the collection
+//     await mongoose.connection.db.dropCollection("products");
+
+//     res.status(200).send({ message: "All products deleted, and collection dropped." });
+//   } catch (error) {
+//     res.status(500).send({ message: error.message });
+//   }
+// });
+
 
 app.listen(port, async () => {
   console.log(`server is running at http://localhost:${port}`);
