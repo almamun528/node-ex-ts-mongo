@@ -1,5 +1,5 @@
 // https://www.youtube.com/watch?v=N2lBBqrxMKo&list=PLgH5QX0i9K3p4ckbNCy71LRr_dG0AWGw9&index=11
-// tutorial 11 : find data using comparison query parameter 
+// tutorial 11 : find data using comparison query parameter
 
 const express = require("express");
 const mongoose = require("mongoose");
@@ -65,59 +65,78 @@ app.get("/api-all-product", async (req, res) => {
     res.status(500).send({ message: error.message });
   }
 });
-// find a single product by id 
-app.get('/api-all-product/:id', async(req,res)=>{
-    try {
-        const id = req.params.id 
-        // const singleProduct = await Product.find({_id:id}).select({_id:0,__v:0}) //mute _id and v 
-        const singleProduct = await Product.find({_id:id})
-        res.status(201).json(singleProduct)
-    } catch (error) {
-        res.status(500).json({message:error.message})
+// find a single product by id
+app.get("/api-all-product/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    // const singleProduct = await Product.find({_id:id}).select({_id:0,__v:0}) //mute _id and v
+    const singleProduct = await Product.find({ _id: id });
+    res.status(201).json(singleProduct);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+// filter products by logical operator
+app.get("/api-filter", async (req, res) => {
+  try {
+    //const products = await Product.find({price:{$gt:400}}) //---{logic to filter the products } gt:400 means greater then 400
+    //const products = await Product.find({price:{$lt:400}})// gt:400 means less then 400
+    //const products = await Product.find({price:{$in:[200,700,600]}})// in: includes 200,600,700
+    const products = await Product.find({ price: { $nin: [200, 700, 600] } }); // nin: Not-includes 200,600,700
+    if (products) {
+      res
+        .status(201)
+        .send({
+          success: true,
+          message: "return all products",
+          data: products,
+        });
+    } else {
+      res
+        .status(404)
+        .send({ success: false, message: "product not founded", data: null });
     }
-})
-// filter products by logical operator 
-app.get('/api-filter',async(req, res)=>{
-    try {
-        
-        //const products = await Product.find({price:{$gt:400}}) //---{logic to filter the products } gt:400 means greater then 400 
-        //const products = await Product.find({price:{$lt:400}})// gt:400 means less then 400 
-        //const products = await Product.find({price:{$in:[200,700,600]}})// in: includes 200,600,700
-        const products = await Product.find({price:{$nin:[200,700,600]}})// nin: Not-includes 200,600,700
-        if(products){ res.status(201).send({success:true, message:'return all products', data:products}) }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+// find by logic from request //!http://localhost:4000/api-filter/1000
+// !request from params
+app.get("/api-filter/:data", async (req, res) => {
+  try {
+    const filterValue = Number(req.params.data);
+    if (isNaN(filterValue))
+      return res
+        .status(404)
+        .json({ message: "data is not found", success: false });
 
-        else{res.status(404).send({success:false, message:'product not founded', data:null})}
+    const products = await Product.find({ price: { $gt: filterValue } }); //---{logic to filter the products }
 
-    } catch (error) {
-        res.status(500).json({message:error.message})
+    if (products) {
+      res
+        .status(201)
+        .send({
+          success: true,
+          message: "return all products",
+          data: products,
+        });
+    } else {
+      res
+        .status(404)
+        .send({ success: false, message: "product not founded", data: null });
     }
-})
-// find by logic from request //!http://localhost:4000/api-filter/1000 
-// !request from params 
-app.get('/api-filter/:data',async(req, res)=>{
-    try {
-        const filterValue = Number(req.params.data);
-        if(isNaN(filterValue))return res.status(404).json({message:'data is not found',success:false})
-            
-
-        const products = await Product.find({price:{$gt:filterValue}}) //---{logic to filter the products }
-
-        if(products){ res.status(201).send({success:true, message:'return all products', data:products}) }
-
-        else{res.status(404).send({success:false, message:'product not founded', data:null})}
-
-    } catch (error) {
-        res.status(500).json({message:error.message})
-    }
-})
-// ! request from query parameter 
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+// ! request from query parameter
 
 app.get("/api-filter", async (req, res) => {
   try {
     // get query from URL //! http://localhost:4000/api-filter?priceFilter=1000
     const priceFilter = req.query.priceFilter;
 
-    const products = await Product.find({ price: {  $gt: priceFilter} });
+    const products = await Product.find({ price: { $gt: priceFilter } });
     if (products) {
       res.status(201).send({
         success: true,
@@ -133,6 +152,34 @@ app.get("/api-filter", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+// !filter by minimum value and maximum value
+app.get("/api-filter", async (req, res) => {
+  try {
+    // query request URL //! http://localhost:4000/api-filter?minPrice=200&maxPrice=3000
+    // convert the users query Input into number
+    const minimumPrice = parseFloat(req.query.minimumPrice) || 0;
+    const maximumPrice =
+      parseFloat(req.query.maximumPrice) || Number.MAX_SAFE_INTEGER;
+
+    // set 2 number into filter (logical operator).. we are filtered by price
+    const products = await Product.find({
+      price: { $gt: minimumPrice, $lt: maximumPrice },
+    });
+    if (products.length > 0) {
+      return res
+        .status(201)
+        .json({ message: "Product Is Founded", success: true, data: products });
+    } else {
+      res
+        .status(404)
+        .json({ message: "data is not founded", success: false, data: null });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 
 // Test route
 app.get("/", (req, res) => {
