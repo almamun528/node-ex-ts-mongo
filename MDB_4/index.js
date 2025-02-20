@@ -1,5 +1,4 @@
-// https://www.youtube.com/watch?v=N2lBBqrxMKo&list=PLgH5QX0i9K3p4ckbNCy71LRr_dG0AWGw9&index=11
-// tutorial 11 : find data using comparison query parameter
+// next tutorial 14 to learn.... Delete methods.. 
 
 const express = require("express");
 const mongoose = require("mongoose");
@@ -27,6 +26,7 @@ connectDB(); // Call the function to connect to MongoDB
 const productSchema = new mongoose.Schema({
   title: { type: String, required: true },
   price: { type: Number, required: true },
+  ratting: { type: Number, required: true },
   description: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
 });
@@ -40,6 +40,7 @@ app.post("/product", async (req, res) => {
     const newProduct = new Product({
       title: req.body.title,
       price: req.body.price,
+      ratting: req.body.rating,
       description: req.body.description,
     });
 
@@ -53,9 +54,12 @@ app.post("/product", async (req, res) => {
 app.get("/api-all-product", async (req, res) => {
   try {
     // find the products
-    const products = await Product.find();
+
+    const products = await Product.find().sort({ price: 1 });
+    //const products = await Product.find().sort({ price: 1 });
+    // sort the product (low to high)
     // check if products are Available
-    if (products) {
+    if (products.length>0) {
       res.status(201).send(products);
     } else {
       res.status(404).send({ message: "product not found" });
@@ -84,13 +88,11 @@ app.get("/api-filter", async (req, res) => {
     //const products = await Product.find({price:{$in:[200,700,600]}})// in: includes 200,600,700
     const products = await Product.find({ price: { $nin: [200, 700, 600] } }); // nin: Not-includes 200,600,700
     if (products) {
-      res
-        .status(201)
-        .send({
-          success: true,
-          message: "return all products",
-          data: products,
-        });
+      res.status(201).send({
+        success: true,
+        message: "return all products",
+        data: products,
+      });
     } else {
       res
         .status(404)
@@ -113,13 +115,11 @@ app.get("/api-filter/:data", async (req, res) => {
     const products = await Product.find({ price: { $gt: filterValue } }); //---{logic to filter the products }
 
     if (products) {
-      res
-        .status(201)
-        .send({
-          success: true,
-          message: "return all products",
-          data: products,
-        });
+      res.status(201).send({
+        success: true,
+        message: "return all products",
+        data: products,
+      });
     } else {
       res
         .status(404)
@@ -180,11 +180,64 @@ app.get("/api-filter", async (req, res) => {
   }
 });
 
+// logical operator and && or ||
+app.get("/logical-filter", async (req, res) => {
+  try {
+    // get query from URL //? http://localhost:4000/logical-filter?priceFilter=700&ratting=4
+    const priceFilter = req.query.priceFilter;
+    const rating = req.query.rating;
+
+    // !and operation //{$and: [{ price: { $gt: priceFilter } }, { rating: { $gt: 4 } }]}
+    // const products = await Product.find({
+    //   $and: [{ price: { $gt: priceFilter } }, { rating: { $gt: ratting} }],
+    // });
+
+    //!{$or:[{ price: { $gt: priceFilter } }, { rating: { $gt: 4 } }]}
+    const products = await Product.find({
+      $or: [{ price: { $gt: priceFilter } }, { rating: { $gt: rating } }],
+      //sort methods
+    }).sort({ price: -1 }); // -1 means Descending and {price : 1} means Ascending
+
+    //!{$nor:[{ price: { $gt: priceFilter } }, { rating: { $gt: ratting } }]}
+    // const products = await Product.find({
+    //   $nor: [{ price: { $gt: priceFilter } }, { rating: { $gt: ratting } }],
+    // });
+
+    if (products) {
+      res.status(201).send({
+        success: true,
+        message: "return all products",
+        data: products,
+      });
+    } else {
+      res
+        .status(404)
+        .send({ success: false, message: "product not founded", data: null });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 // Test route
 app.get("/", (req, res) => {
   res.json({ test: "Server is running" });
 });
+
+// ! Delete all products and drop the collection
+// app.delete("/products", async (req, res) => {
+//   try {
+//     // Delete all documents
+//     await Product.deleteMany({});
+
+//     // Drop the collection
+//     await mongoose.connection.db.dropCollection("products");
+
+//     res.status(200).send({ message: "All products deleted, and collection dropped." });
+//   } catch (error) {
+//     res.status(500).send({ message: error.message });
+//   }
+// });
 
 // Start the server
 app.listen(port, () => {
