@@ -76,7 +76,24 @@ app.get('/api-all-product/:id', async(req,res)=>{
         res.status(500).json({message:error.message})
     }
 })
-// find by logic from request //!http://localhost:4000/api-filter/1000
+// filter products by logical operator 
+app.get('/api-filter',async(req, res)=>{
+    try {
+        
+        //const products = await Product.find({price:{$gt:400}}) //---{logic to filter the products } gt:400 means greater then 400 
+        //const products = await Product.find({price:{$lt:400}})// gt:400 means less then 400 
+        //const products = await Product.find({price:{$in:[200,700,600]}})// in: includes 200,600,700
+        const products = await Product.find({price:{$nin:[200,700,600]}})// nin: Not-includes 200,600,700
+        if(products){ res.status(201).send({success:true, message:'return all products', data:products}) }
+
+        else{res.status(404).send({success:false, message:'product not founded', data:null})}
+
+    } catch (error) {
+        res.status(500).json({message:error.message})
+    }
+})
+// find by logic from request //!http://localhost:4000/api-filter/1000 
+// !request from params 
 app.get('/api-filter/:data',async(req, res)=>{
     try {
         const filterValue = Number(req.params.data);
@@ -93,21 +110,30 @@ app.get('/api-filter/:data',async(req, res)=>{
         res.status(500).json({message:error.message})
     }
 })
-app.get('/api-filter',async(req, res)=>{
-    try {
-        
-        //const products = await Product.find({price:{$gt:400}}) //---{logic to filter the products } gt:400 means greater then 400 
-        //const products = await Product.find({price:{$lt:400}})// gt:400 means less then 400 
-        //const products = await Product.find({price:{$in:[200,700,600]}})// in: includes 200,600,700
-        const products = await Product.find({price:{$nin:[200,700,600]}})// nin: Not-includes 200,600,700
-        if(products){ res.status(201).send({success:true, message:'return all products', data:products}) }
+// ! request from query parameter 
 
-        else{res.status(404).send({success:false, message:'product not founded', data:null})}
+app.get("/api-filter", async (req, res) => {
+  try {
+    // get query from URL //! http://localhost:4000/api-filter?priceFilter=1000
+    const priceFilter = req.query.priceFilter;
 
-    } catch (error) {
-        res.status(500).json({message:error.message})
+    const products = await Product.find({ price: {  $gt: priceFilter} });
+    if (products) {
+      res.status(201).send({
+        success: true,
+        message: "return all products",
+        data: products,
+      });
+    } else {
+      res
+        .status(404)
+        .send({ success: false, message: "product not founded", data: null });
     }
-})
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 // Test route
 app.get("/", (req, res) => {
   res.json({ test: "Server is running" });
