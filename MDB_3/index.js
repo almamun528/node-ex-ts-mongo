@@ -89,6 +89,7 @@ app.get("/products/:id", async (req, res) => {
     //  //! short hand code coma (, + property )
 
   res.send(Product);
+  
   } catch (error) {
     res.status(500).send({ message: error.message });
   }
