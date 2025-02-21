@@ -219,9 +219,6 @@ app.get("/logical-filter", async (req, res) => {
   }
 });
 
-
-
-
 //!delete a document || delete a single item by params id
 app.delete("/products/:id", async (req, res) => {
   try {
@@ -246,8 +243,7 @@ app.delete("/products/:id", async (req, res) => {
   }
 });
 
-
-// delete a single product by query parameter 
+// delete a single product by query parameter
 //localhost:4000/delete/?id=67b880543a8d39fdfa091c29
 app.delete("/delete", async (req, res) => {
   try {
@@ -269,12 +265,44 @@ app.delete("/delete", async (req, res) => {
   }
 });
 
-
 //? update a single document
+// put operation
 
+app.put("/update/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
 
+    // const updateProduct = await Product.updateOne(
+    //   { _id: id },
+    //   { $set: { ratting: 4.6 } } );
+    //do not return the whole product-->updateOne
 
-
+    // *return whole product by using--> findByIdAndUpdate
+    const updateProduct = await Product.findByIdAndUpdate(
+      { _id: id },
+      {
+        // set the value directly 
+        $set: {
+          title: req.body.title,
+          price: req.body.price,
+          ratting: req.body.ratting,
+        },
+      },
+      { new: true } //--> Immediate update the data needs to use --> {new:true} this object property
+    );
+    if (updateProduct) {
+      res.status(200).send({
+        success: true,
+        message: "updated successful",
+        data: updateProduct,
+      });
+    } else {
+      res.status(404).send({ success: false, message: "product not found" });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 // Test route
 app.get("/", (req, res) => {
