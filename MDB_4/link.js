@@ -13,3 +13,6 @@
 
 // tutorial 16 : mongoose built-in schema validation
 // https://www.youtube.com/watch?v=gJt98C7kNxU&list=PLgH5QX0i9K3p4ckbNCy71LRr_dG0AWGw9&index=16
+
+// tutorial 17 : mongoose custom schema validation
+// https://www.youtube.com/watch?v=DqWIRump3y4&list=TLPQMjEwMjIwMjVwpEl2fWK27Q&index=17
