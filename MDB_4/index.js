@@ -1,4 +1,4 @@
-// next tutorial 14 to learn.... Delete methods.. 
+// next tutorial 14 to learn.... Delete methods..
 
 const express = require("express");
 const mongoose = require("mongoose");
@@ -40,7 +40,7 @@ app.post("/product", async (req, res) => {
     const newProduct = new Product({
       title: req.body.title,
       price: req.body.price,
-      ratting: req.body.rating,
+      ratting: req.body.ratting,
       description: req.body.description,
     });
 
@@ -59,7 +59,7 @@ app.get("/api-all-product", async (req, res) => {
     //const products = await Product.find().sort({ price: 1 });
     // sort the product (low to high)
     // check if products are Available
-    if (products.length>0) {
+    if (products.length > 0) {
       res.status(201).send(products);
     } else {
       res.status(404).send({ message: "product not found" });
@@ -218,6 +218,63 @@ app.get("/logical-filter", async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 });
+
+
+
+
+//!delete a document || delete a single item by params id
+app.delete("/products/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    // const product = await Product.deleteOne({ _id: id }); //one way to delete like mongoDB does--> it does not return the data which is deleted.
+    const product = await Product.findByIdAndDelete({ _id: id });
+    // findByIdAndDelete -> mongoose provide-> it helps to return the deleted data into the variable
+
+    if (product) {
+      res
+        .status(200)
+        .send({ success: true, message: "deleted", data: product });
+    } else {
+      res.status(404).send({
+        success: false,
+        data: null,
+        message: "product not found with this id",
+      });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+
+// delete a single product by query parameter 
+//localhost:4000/delete/?id=67b880543a8d39fdfa091c29
+app.delete("/delete", async (req, res) => {
+  try {
+    const id = req.query.id;
+    const deletedProduct = await Product.findByIdAndDelete({ _id: id });
+    if (deletedProduct) {
+      res.status(200).send({
+        success: true,
+        message: "product deleted",
+        data: deletedProduct,
+      });
+    } else {
+      res
+        .status(404)
+        .send({ success: false, message: "id is not found", data: null });
+    }
+  } catch (error) {
+    req.status(500).json({ message: error.message });
+  }
+});
+
+
+//? update a single document
+
+
+
+
 
 // Test route
 app.get("/", (req, res) => {
