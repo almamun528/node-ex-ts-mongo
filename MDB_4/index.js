@@ -1,5 +1,3 @@
-// next tutorial 14 to learn.... Delete methods..
-
 const express = require("express");
 const mongoose = require("mongoose");
 
@@ -24,10 +22,37 @@ connectDB(); // Call the function to connect to MongoDB
 
 // Create a product schema
 const productSchema = new mongoose.Schema({
-  title: { type: String, required: true },
-  price: { type: Number, required: true },
+  // schema validation --> either use object syntax or object syntax
+  title: {
+    type: String,
+    //  minlength:3, //! product title will be only 3 alphabet /letter
+    minlength: [3, "product title minimum length 3"],
+    maxlength: [100, "product title maximum 10 letter"],
+    // uppercase:true, // make all upper case
+    lowercase: true, //make all lower case
+    trim: true, // before after space will be removed
+    // enum:["iphone",'samsung'], // it will accept only this two title
+    // enum:{
+    //   values:['i phone','samsung', 'nokia','one plus',],
+    //   message:"{VALUE} is not supported"
+    // },
+    required: [true, "product title is required"],
+  },
+  // title: { type: String, required: true }, //object
+  price: {
+    type: Number,
+    min: [200, "minimum price is 200"],
+    max: [2000, " maximum price should be under 2000 or equal 2000"],
+    required: true,
+  },
+
   ratting: { type: Number, required: true },
   description: { type: String, required: true },
+  // email--> must be unique one user can not use same email to login or create user 
+  email: {
+    type: String,
+    unique: true,
+  },
   createdAt: { type: Date, default: Date.now },
 });
 
@@ -45,7 +70,7 @@ app.post("/product", async (req, res) => {
     });
 
     const productData = await newProduct.save();
-    res.status(201).json(productData);
+    res.status(201).send(productData);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -281,7 +306,7 @@ app.put("/update/:id", async (req, res) => {
     const updateProduct = await Product.findByIdAndUpdate(
       { _id: id },
       {
-        // set the value directly 
+        // set the value directly
         $set: {
           title: req.body.title,
           price: req.body.price,
@@ -328,3 +353,5 @@ app.get("/", (req, res) => {
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
+
+// next tutorial ---16 Schema validation

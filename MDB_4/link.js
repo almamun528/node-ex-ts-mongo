@@ -11,3 +11,5 @@
 // tutorial 15 : update data --- put 
 // https://www.youtube.com/watch?v=FawoxpIMbP8&list=PLgH5QX0i9K3p4ckbNCy71LRr_dG0AWGw9&index=15
 
+// tutorial 16 : mongoose built-in schema validation
+// https://www.youtube.com/watch?v=gJt98C7kNxU&list=PLgH5QX0i9K3p4ckbNCy71LRr_dG0AWGw9&index=16
