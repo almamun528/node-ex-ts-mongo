@@ -1,11 +1,12 @@
-// DataBase Encryption Authentication 
-// !see user Schema file 'mongoose-encryption' this npm package is used  
+// Hashing Password 
+
 const express = require("express");
 const app = express();
 const port = 3001;
 const mongoose = require("mongoose");
 const cors = require("cors");
 const User = require("./model/users.model");
+const md5 = require("md5");
 
 // middle wear
 app.use(cors());
@@ -31,8 +32,11 @@ app.get("/", (req, res) => {
 // ? User Register (create User )
 app.post("/register", async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const newUser = new User({ email, password });
+    
+    const newUser = new User({
+      email:req.body.email,
+      password:md5(req.body.password) //password will be Encrypted
+    })
     // save the data
     await newUser.save();
     res.status(201).json(newUser); //send the response 
@@ -43,17 +47,14 @@ app.post("/register", async (req, res) => {
 // ! user Login
 app.post("/login", async (req, res) => {
   try {
-const {email, password} = req.body
-const user = await User.findOne({email:email})
-if(user && user.password===password){
-    res.status(200).json({status:'you are log in '})
-}
-
-else{
-   res.status(404).json({status:'Not valid user'})
-
-}
-    
+    const email = req.body.email;
+    const password = md5(req.body.password); // to check the password it needs to make Encrypted again
+    const user = await User.findOne({ email: email });
+    if (user && user.password === password) {
+      res.status(200).json({ status: "you are log in " });
+    } else {
+      res.status(404).json({ status: "Not valid user" });
+    }
   } catch (error) {
     res.status(201).json({ message: error.message });
   }
