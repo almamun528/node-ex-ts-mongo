@@ -62,12 +62,12 @@ app.post("/login", async (req, res) => {
     const user = await User.findOne({ email: email });
     if (user) {
       // Load hash from your password DB.
-      bcrypt.compare(password, user?.password, function (err, result) {
+      bcrypt.compare(password, hash, function (err, result) {
         // result == true
-        if (result === true) {
-          res.status(200).json({ status: "you are log in " });
-        }
       });
+      if (result === true) {
+        res.status(200).json({ status: "you are log in " });
+      }
     } else {
       res.status(404).json({ status: "Not valid user" });
     }

@@ -1,4 +1,4 @@
-// tutorial 4 : Salting and Hashing passwords
+// Hashing Password 
 
 const express = require("express");
 const app = express();
@@ -6,9 +6,7 @@ const port = 3001;
 const mongoose = require("mongoose");
 const cors = require("cors");
 const User = require("./model/users.model");
-// https://www.npmjs.com/package/bcrypt
-const bcrypt = require("bcrypt");
-const saltRounds = 10;
+const md5 = require("md5");
 
 // middle wear
 app.use(cors());
@@ -34,40 +32,26 @@ app.get("/", (req, res) => {
 // ? User Register (create User )
 app.post("/register", async (req, res) => {
   try {
-    const { email, password } = req.body;
-
-    // Hash the password using await
-    const hash = await bcrypt.hash(password, saltRounds);
-
-    // Create a new user
+    
     const newUser = new User({
-      email,
-      password: hash,
-    });
-
-    // Save the user to the database
+      email:req.body.email,
+      password:md5(req.body.password) //password will be Encrypted
+    })
+    // save the data
     await newUser.save();
-
-    res.status(201).json(newUser); // Send the response
+    res.status(201).json(newUser); //send the response 
   } catch (error) {
-    res.status(500).json({ message: error.message }); // Use status 500 for errors
+    res.status(201).json({ message: error.message });
   }
 });
-
 // ! user Login
 app.post("/login", async (req, res) => {
   try {
     const email = req.body.email;
-    const password = req.body.password; // to check the password it needs to make Encrypted again
+    const password = md5(req.body.password); // to check the password it needs to make Encrypted again
     const user = await User.findOne({ email: email });
-    if (user) {
-      // Load hash from your password DB.
-      bcrypt.compare(password, user?.password, function (err, result) {
-        // result == true
-        if (result === true) {
-          res.status(200).json({ status: "you are log in " });
-        }
-      });
+    if (user && user.password === password) {
+      res.status(200).json({ status: "you are log in " });
     } else {
       res.status(404).json({ status: "Not valid user" });
     }
