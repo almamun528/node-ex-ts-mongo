@@ -13,3 +13,4 @@ function addNumber(num1, num2) {
 addNumber(20, 22);
 addNumber(20, 1);
 //index.ts ----> tsc index.ts 
+console.log('learning typescript day 2')
