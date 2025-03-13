@@ -14,8 +14,12 @@ const ageCal = (name: string, age: number):string => {
 console.log(ageCal("hello", 30))
 
 const moneyCal =():void=>{console.log(2+2)}
-
+// it consider as type narrowing and also logical type define 
 const monCal =(): never =>{throw new Error(' error happens')}
+const myInfo = (val: string | number) => {
+  if (typeof val === "string") return val.toLocaleLowerCase();
+  return val + 10;
+};
 
 // array 
 const food: string[] = ["apple", "mango", "orang"];
@@ -49,3 +53,32 @@ const stuff: User = {
   age: 30,
   skill: true,
 };
+// Class contractor 
+class Student {
+  public name: String;
+  public age: number;
+  public skill: boolean;
+  //   private age: number; 
+  //   if we use private the keys only use the value inside the class 
+  //   protected age: number; 
+//   protected 
+
+  constructor(name: string, age: number, skill: boolean) {
+    this.name = name;
+    this.age = age;
+    this.skill = skill;
+  }
+//public can be access outside of class 
+}
+
+class Teacher extends Student {
+  constructor(name: string, age: number, skill: boolean) {
+    super(name, age, skill);
+  }
+  ageCal() {
+    const difference = this.age - this.age;
+    return difference;
+  }
+}
+const TeachN = new Teacher('kp', 40, true)
+const stuntN = new Student("Abd", 30, true);
