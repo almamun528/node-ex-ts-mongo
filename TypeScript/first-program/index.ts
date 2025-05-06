@@ -22,4 +22,5 @@ function addNumbers(num1: number, num2: number) {
   return console.log("result --> ", result);
 }
 addNumbers(1, 2);
-console.log('-----------------------------------------------------------------------')
+console.log('-----------------------------------------------------------------------') 
+
