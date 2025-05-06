@@ -21,4 +21,3 @@ users = [
 users.push(user1,user2)
 console.log('result---> ',users)
 
-// ? 
