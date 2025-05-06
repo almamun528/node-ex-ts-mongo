@@ -15,9 +15,9 @@ var requestType;
     requestType["getData"] = "Get_Data";
     requestType["DeleteData"] = "delete data";
 })(requestType || (requestType = {}));
-// console.log(requestType.readData);
-// console.log(requestType.DeleteData);
-// console.log(requestType["readData"]);
+console.log(requestType.readData);
+console.log(requestType.DeleteData);
+console.log(requestType["readData"]);
 // ? heterogenous enum
 var requestType3;
 (function (requestType3) {

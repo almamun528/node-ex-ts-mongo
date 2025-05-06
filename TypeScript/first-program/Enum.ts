@@ -16,9 +16,9 @@ enum requestType {
   getData = "Get_Data",
   DeleteData = "delete data",
 }
-// console.log(requestType.readData);
-// console.log(requestType.DeleteData);
-// console.log(requestType["readData"]);
+console.log(requestType.readData);
+console.log(requestType.DeleteData);
+console.log(requestType["readData"]);
 
 // ? heterogenous enum
 
