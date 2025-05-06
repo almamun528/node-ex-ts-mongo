@@ -1,6 +1,7 @@
 // tutorial 15 : Encapsulation & access modifiers
 
 // public , private , readonly , protected
+// read only property helps only to show and access data. It does not allows minification
 class User {
   // public is by default
   // if we do not use public key it's already be the public (default is public)
@@ -43,9 +44,8 @@ class Student extends User {
 }
 
 let student1 = new Student("anisul", 33, 11102);
-student1.setStudentId(123113)
-console.log(student1.getStudentId())
-
+student1.setStudentId(123113);
+console.log(student1.getStudentId());
 
 // let user1 = new User("robi", 23);
 // user1.userName = "pinky";

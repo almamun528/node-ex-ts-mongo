@@ -15,6 +15,7 @@ var __extends = (this && this.__extends) || (function () {
     };
 })();
 // public , private , readonly , protected
+// read only property helps only to show and access data. It does not allows minification
 var User = /** @class */ (function () {
     function User(userName, age) {
         this.userName = userName;
