@@ -1,3 +1,4 @@
+import DataFetch from "./DataFetch";
 import User from "./User";
 import UserDemo from "./UserDemo";
 
@@ -46,6 +47,8 @@ function App() {
 
       <h1>Demo Users data</h1>
       <UserDemo allUsers={allUsers} />
+      <h1>Data Fetch</h1>
+      <DataFetch status={"success"} />
     </div>
   );
 }
