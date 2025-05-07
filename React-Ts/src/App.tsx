@@ -1,6 +1,7 @@
 import DataFetch from "./DataFetch";
 import User from "./User";
 import UserDemo from "./UserDemo";
+import { useState } from "react";
 
 // build in data types
 const allUsers = [
@@ -30,11 +31,26 @@ const user2 = {
   isRegister: true,
   lang: ["Panjabi", "Hindi", "english"],
 };
-
+type user = {
+  id: number;
+  name: string;
+};
 function App() {
+  const [myUser, setUsers] = useState<null | user>(null);
+  const handleAddUsers = () => {
+    setUsers({ id: 1, name: "mamun" });
+    // console.log(myUser);
+  };
+
   return (
     <div>
-      <h2>Hello world</h2>
+      <br />
+      <p>{myUser?.name}</p>
+      <button onClick={handleAddUsers}>add user</button>
+      <button>-</button>
+      <h2>
+        ------------------------------------------------------------------------
+      </h2>
       <User
         user={user1}
         // name={"Abdullah Al Mamun"}
@@ -49,6 +65,8 @@ function App() {
       <UserDemo allUsers={allUsers} />
       <h1>Data Fetch</h1>
       <DataFetch status={"success"} />
+
+      {/* state--- */}
     </div>
   );
 }
