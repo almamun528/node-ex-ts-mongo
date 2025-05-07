@@ -13,9 +13,8 @@ type UserProps = {
 
 const User = ({ user }: UserProps) => {
   return (
+ <section>
     <div>
-      <h1>All Users is here </h1>
-      <br />
       <h3>name: {user.name}</h3>
       <h3>age: {user.age}</h3>
       <h2>
@@ -29,6 +28,7 @@ const User = ({ user }: UserProps) => {
         ))}
       </div>
     </div>
+ </section>
   );
 };
 
