@@ -1,4 +1,5 @@
 import DataFetch from "./DataFetch";
+import NewUser from "./NewUser";
 import User from "./User";
 import UserDemo from "./UserDemo";
 import { useState } from "react";
@@ -36,7 +37,8 @@ type user = {
   name: string;
 };
 function App() {
-  const [myUser, setUsers] = useState<null | user>(null);
+  // const [myUser, setUsers] = useState<null | user>(null);
+  const [myUser, setUsers] = useState<user>({} as user); //if we do this we don't have to use optional chaining
   const handleAddUsers = () => {
     setUsers({ id: 1, name: "mamun" });
     // console.log(myUser);
@@ -44,6 +46,9 @@ function App() {
 
   return (
     <div>
+      <NewUser/>
+
+
       <br />
       <p>{myUser?.name}</p>
       <button onClick={handleAddUsers}>add user</button>
